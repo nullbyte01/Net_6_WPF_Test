@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TestApp.WPF.Services;
+using TestApp.WPF.ViewModels;
 
 namespace TestApp.WPF
 {
@@ -21,17 +23,14 @@ namespace TestApp.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        ITestService _testService;
-        public MainWindow(ITestService service)
+        public MainWindow()
         {
-            _testService = service;
-
             InitializeComponent();
         }
-        protected async override void OnInitialized(EventArgs e)
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            string data = (await _testService.GetData());
-            MessageBox.Show($"Retrieved Data: {data}", "Result");
+            App._host.Services.GetRequiredService<MainViewModel>().WindowLoadedCommand.Execute(this);
         }
     }
 }

@@ -3,10 +3,98 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
         xmlns:local="clr-namespace:TestApp.WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="{Binding Title}" Height="450" Width="800" Loaded="Window_Loaded" ResizeMode="NoResize">
     <Grid>
 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <GroupBox Header="" Margin="10" Padding="5" Grid.Column="0">
+            
+            <Grid>
+                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <TextBlock HorizontalAlignment="Center" Grid.Column="0" Grid.ColumnSpan="2" FontWeight="Bold" Grid.Row="0" Margin="5">
+                    <Run Text="{Binding OperationMode}"/>
+                    <Run Text=" Information"/>
+                </TextBlock>
+
+                <TextBlock Grid.Column="0" Grid.Row="1" Margin="5" Text="Title"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="2" Margin="5" Text="Description"/>
+
+                <TextBox Grid.Column="1" Grid.Row="1" Margin="5" Text="{Binding Header}"></TextBox>
+
+                <TextBox Grid.Column="1" Grid.Row="2" Margin="5" Text="{Binding Description}"></TextBox>
+
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Grid.Row="3" Grid.ColumnSpan="2">
+                    <Button Content="{Binding OperationMode}" Command="{Binding AddCommand}" Margin="5" Height="25" Width="65"></Button>
+                    <Button Content="Clear" Command="{Binding ClearCommand}" Margin="5" Height="25" Width="65"></Button>
+                </StackPanel>
+
+            </Grid>
+            
+        </GroupBox>
+
+        <Grid Grid.Column="1" Margin="0,10,10,0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="200"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <syncfusion:SfDataGrid Grid.Row="0" HorizontalAlignment="Center" Margin="0,10" ItemsSource="{Binding ElementName=dataPager,Path=PagedSource}" SelectedItem="{Binding SelectedInformation}" SelectionUnit="Row" SelectionMode="Single">
+                
+                <syncfusion:SfDataGrid.FilterPopupStyle>
+                    <Style TargetType="syncfusion:GridFilterControl">
+                        <Setter Property="FilterMode" Value="AdvancedFilter"></Setter>
+                    </Style>
+                </syncfusion:SfDataGrid.FilterPopupStyle>
+                
+                <syncfusion:SfDataGrid.Columns>
+                    
+                    <syncfusion:GridTextColumn AllowFiltering="False" HeaderText="Id" MappingName="Id" MaximumWidth="50" />
+                    <syncfusion:GridTextColumn HeaderText="Header" MappingName="Header" MinimumWidth="50" />
+                    <syncfusion:GridTextColumn AllowFiltering="False" HeaderText="Description" MappingName="Description" MinimumWidth="50" />
+
+                    <syncfusion:GridTemplateColumn AllowFiltering="False" AllowSorting="False" Width="65">
+                        <syncfusion:GridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Edit" Command="{Binding Path=DataContext.EditCommand,RelativeSource={RelativeSource AncestorType={x:Type syncfusion:SfDataGrid},Mode=FindAncestor}}"></Button>
+                            </DataTemplate>
+                        </syncfusion:GridTemplateColumn.CellTemplate>
+                    </syncfusion:GridTemplateColumn>
+
+                    <syncfusion:GridTemplateColumn AllowFiltering="False" AllowSorting="False" Width="65">
+                        <syncfusion:GridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Delete" Command="{Binding Path=DataContext.DeleteCommand,RelativeSource={RelativeSource AncestorType={x:Type syncfusion:SfDataGrid},Mode=FindAncestor}}"></Button>
+                            </DataTemplate>
+                        </syncfusion:GridTemplateColumn.CellTemplate>
+                    </syncfusion:GridTemplateColumn>
+                    
+                </syncfusion:SfDataGrid.Columns>
+                
+            </syncfusion:SfDataGrid>
+            
+            <syncfusion:SfDataPager HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="1" Name="dataPager" PageSize="4" Source="{Binding InformationCollection}"></syncfusion:SfDataPager>
+        </Grid>
     </Grid>
 </Window>
